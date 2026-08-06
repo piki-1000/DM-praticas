@@ -7,6 +7,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.api.WeatherService
+import com.example.weatherapp.api.toForecast
 import com.example.weatherapp.api.toWeather
 import com.example.weatherapp.db.fb.FBCity
 import com.example.weatherapp.db.fb.FBDatabase
@@ -16,7 +17,11 @@ import com.google.android.gms.maps.model.LatLng
 
 class MainViewModel (private val db: FBDatabase,
                      private val service : WeatherService): ViewModel(), FBDatabase.Listener {
-
+    private var _city = mutableStateOf<String?>(null)
+    var city: String?
+        get() = _city.value
+        set(tmp) { _city.value = tmp }
+    private val _forecast = mutableStateMapOf<String, List<Forecast>?>()
     private val _cities = mutableStateMapOf<String, City>()
     val cities : List<City>
         get() = _cities.values.toList().sortedBy { it.name }
@@ -76,6 +81,21 @@ class MainViewModel (private val db: FBDatabase,
             }
         }
     }
+
+    fun forecast (name: String) = _forecast.getOrPut(name) {
+        loadForecast(name)
+        emptyList() // return
+    }
+
+    private fun loadForecast(name: String) {
+        service.getForecast(name) { apiForecast ->
+            apiForecast?.let {
+                _forecast[name] = apiForecast.toForecast()
+            }
+        }
+    }
+
+
 }
 
 

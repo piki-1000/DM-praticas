@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+import android.R.attr.name
 import android.app.Activity
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -31,6 +32,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.db.fb.FBDatabase
+import com.example.weatherapp.db.fb.toFBUser
+import com.example.weatherapp.model.User
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -105,6 +109,7 @@ fun RegisterPage(modifier: Modifier = Modifier) {
                         if (task.isSuccessful) {
                             Toast.makeText(activity,
                                 "Registro OK!", Toast.LENGTH_LONG).show()
+                            FBDatabase().register(User(username, email).toFBUser())
                         } else {
                             Log.e("RegisterActivity", "Registration failed", task.exception)
                             Toast.makeText(activity,

@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,6 +37,8 @@ import com.example.weatherapp.model.City
 import com.example.weatherapp.model.MainViewModel
 import com.example.weatherapp.model.Weather
 import com.example.weatherapp.ui.nav.Route
+import com.example.weatherapp.R
+import coil.compose.AsyncImage
 
 @Composable
 fun ListPage(modifier: Modifier = Modifier, viewModel: MainViewModel
@@ -77,9 +80,11 @@ fun CityItem(
         modifier = modifier.fillMaxWidth().padding(8.dp).clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            Icons.Rounded.FavoriteBorder,
-            contentDescription = ""
+        AsyncImage( // Substitui o Icon(...)
+            model = weather.imgUrl,
+            modifier = modifier.size(75.dp),
+            error = painterResource(id = R.drawable.loading),
+            contentDescription = "Imagem"
         )
         Spacer(modifier = Modifier.size(12.dp))
         Column(modifier = modifier.weight(1f)) {

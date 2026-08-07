@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.weatherapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -81,4 +81,5 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:3.0.0")
     implementation ("com.squareup.retrofit2:converter-gson:3.0.0")
     implementation("io.coil-kt:coil-compose:2.7.0") // coil
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
 }

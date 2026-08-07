@@ -33,12 +33,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherapp.model.City
 import com.example.weatherapp.model.MainViewModel
 import com.example.weatherapp.model.Weather
 import com.example.weatherapp.ui.nav.Route
 import com.example.weatherapp.R
 import coil.compose.AsyncImage
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.Notifications
 
 @Composable
 fun ListPage(modifier: Modifier = Modifier, viewModel: MainViewModel
@@ -51,7 +54,7 @@ fun ListPage(modifier: Modifier = Modifier, viewModel: MainViewModel
             .padding(8.dp)
     ) {
         items(items = cityList, key = { it.name } ) { city ->
-            CityItem(city = city, weather = viewModel.weather(city.name), onClose = {
+            CityItem(city = city, weather = viewModel.weather(city.name), viewModel = viewModel, onClose = {
                 Toast.makeText(activity, "Cidade removida com sucesso!", Toast.LENGTH_LONG).show()
                 viewModel.remove(city)
             }, onClick = {
@@ -71,6 +74,7 @@ fun ListPage(modifier: Modifier = Modifier, viewModel: MainViewModel
 fun CityItem(
     city: City,
     weather: Weather,
+    viewModel: MainViewModel,
     onClick: () -> Unit,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
@@ -80,6 +84,10 @@ fun CityItem(
         modifier = modifier.fillMaxWidth().padding(8.dp).clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
+        val icon = if (city.isMonitored) Icons.Filled.Notifications else Icons.Outlined.Notifications
+        Icon( imageVector = icon, contentDescription = "Monitorada?",
+            modifier = Modifier.size(32.dp)
+        )
         AsyncImage( // Substitui o Icon(...)
             model = weather.imgUrl,
             modifier = modifier.size(75.dp),

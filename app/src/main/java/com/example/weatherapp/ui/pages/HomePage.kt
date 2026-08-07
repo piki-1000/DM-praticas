@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SegmentedButtonDefaults.Icon
@@ -43,7 +45,7 @@ fun HomePage(modifier: Modifier = Modifier,viewModel: MainViewModel) {
     Column {
         if (viewModel.city == null) {
             Column( modifier = modifier.fillMaxSize()
-                .background(Color.Blue).wrapContentSize(Alignment.Center)
+                .background(Color.Gray).wrapContentSize(Alignment.Center)
             ) {
                 Text( text = "Selecione uma cidade!",
                     fontWeight = FontWeight.Bold, color = Color.White,
@@ -59,17 +61,26 @@ fun HomePage(modifier: Modifier = Modifier,viewModel: MainViewModel) {
                     contentDescription = "Imagem"
                 )
                 Column {
-                    Spacer(modifier = modifier.size(12.dp))
-                    Text( text = viewModel.city ?: "Selecione uma cidade...",
-                        fontSize = 28.sp )
-                    viewModel.city?.let { name ->
-                        val weather = viewModel.weather(name)
+                    Column {
                         Spacer(modifier = modifier.size(12.dp))
-                        Text( text = weather.desc ?: "...",
-                            fontSize = 22.sp )
-                        Spacer(modifier = modifier.size(12.dp))
-                        Text( text = "Temp: " + weather.temp + "℃",
-                            fontSize = 22.sp )
+                        Row {
+                            Text(
+                                text = viewModel.city ?: "Selecione uma cidade...",
+                                fontSize = 28.sp
+                            )
+                            val city = viewModel.cities.find { it.name == viewModel.city }
+                            if (city != null) {
+                                val icon = if (city.isMonitored) Icons.Filled.Notifications
+                                else Icons.Outlined.Notifications
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = "Monitorada?",
+                                    modifier = Modifier.size(32.dp).clickable {
+                                        viewModel.update(city = city.copy(isMonitored = !city.isMonitored))
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }
